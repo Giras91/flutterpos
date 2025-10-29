@@ -600,13 +600,22 @@ class _POSOrderScreenState extends State<POSOrderScreen> {
                 padding: const EdgeInsets.all(12.0),
                 child: LayoutBuilder(
                   builder: (context, constraints) {
-                    return ClipRect(
-                      child: SingleChildScrollView(
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                            minHeight: constraints.maxHeight,
-                          ),
-                          child: IntrinsicHeight(
+                    // Avoid IntrinsicHeight inside viewports — it can trigger
+                    // expensive/unsupported intrinsic measurements on some
+                    // platforms. Use two modes:
+                    // 1) For short heights, render a fully scrollable column so
+                    //    the whole panel can scroll (no IntrinsicHeight needed).
+                    // 2) For sufficient height, size the panel to the
+                    //    available height and use an Expanded ListView so the
+                    //    footer remains pinned.
+                    if (constraints.maxHeight < 260) {
+                      // Very short: make everything scrollable
+                      return ClipRect(
+                        child: SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              minHeight: constraints.maxHeight,
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
@@ -618,29 +627,23 @@ class _POSOrderScreenState extends State<POSOrderScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 8),
-                                // Flexible so the list can shrink when height is limited
-                                Flexible(
-                                  child: cartItems.isEmpty
-                                      ? const Center(
-                                          child: Text('Cart is empty'),
-                                        )
-                                      : ListView.separated(
-                                          itemCount: cartItems.length,
-                                          separatorBuilder: (_, __) =>
-                                              const Divider(),
-                                          itemBuilder: (_, idx) {
-                                            final ci = cartItems[idx];
-                                            return CartItemWidget(
-                                              item: ci,
-                                              onAdd: () {
-                                                setState(() => ci.quantity++);
-                                              },
-                                              onRemove: () =>
-                                                  removeFromCart(idx),
-                                            );
-                                          },
-                                        ),
-                                ),
+                                cartItems.isEmpty
+                                    ? const Center(child: Text('Cart is empty'))
+                                    : Column(
+                                        children: cartItems
+                                            .map(
+                                              (ci) => CartItemWidget(
+                                                item: ci,
+                                                onAdd: () {
+                                                  setState(() => ci.quantity++);
+                                                },
+                                                onRemove: () => removeFromCart(
+                                                  cartItems.indexOf(ci),
+                                                ),
+                                              ),
+                                            )
+                                            .toList(),
+                                      ),
                                 const SizedBox(height: 8),
                                 Text(
                                   'Subtotal: ${FormattingService.currency(getSubtotal())}',
@@ -691,6 +694,91 @@ class _POSOrderScreenState extends State<POSOrderScreen> {
                               ],
                             ),
                           ),
+                        ),
+                      );
+                    }
+
+                    // Normal mode: enough height to pin footer and let the
+                    // middle list expand/scroll.
+                    return ClipRect(
+                      child: SizedBox(
+                        height: constraints.maxHeight,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            const Text(
+                              'Cart',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Expanded(
+                              child: cartItems.isEmpty
+                                  ? const Center(child: Text('Cart is empty'))
+                                  : ListView.separated(
+                                      itemCount: cartItems.length,
+                                      separatorBuilder: (_, __) =>
+                                          const Divider(),
+                                      itemBuilder: (_, idx) {
+                                        final ci = cartItems[idx];
+                                        return CartItemWidget(
+                                          item: ci,
+                                          onAdd: () {
+                                            setState(() => ci.quantity++);
+                                          },
+                                          onRemove: () => removeFromCart(idx),
+                                        );
+                                      },
+                                    ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Subtotal: ${FormattingService.currency(getSubtotal())}',
+                            ),
+                            if (BusinessInfo.instance.isTaxEnabled)
+                              Text(
+                                'Tax: ${FormattingService.currency(getTaxAmount())}',
+                              ),
+                            if (BusinessInfo.instance.isServiceChargeEnabled)
+                              Text(
+                                'Service: ${FormattingService.currency(getServiceChargeAmount())}',
+                              ),
+                            Text(
+                              'Total: ${FormattingService.currency(getTotal())}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: cartItems.isEmpty
+                                        ? null
+                                        : _checkout,
+                                    child: const Text('Checkout'),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: cartItems.isEmpty
+                                        ? null
+                                        : _saveAndReturn,
+                                    child: const Text('Save & Return'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            TextButton(
+                              onPressed: clearCart,
+                              child: const Text('Clear Cart'),
+                            ),
+                          ],
                         ),
                       ),
                     );

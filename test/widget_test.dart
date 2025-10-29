@@ -20,15 +20,15 @@ void main() {
       'has_seen_tutorial': true,
     });
 
-  // Initialize ConfigService so the app can read the mock pref during startup
-  await ConfigService.instance.init();
+    // Initialize ConfigService so the app can read the mock pref during startup
+    await ConfigService.instance.init();
 
-  // Build our app and trigger a frame.
-  await tester.pumpWidget(const ExtroPOSApp());
-  // Allow any startup timers/animations to settle (tutorial delay, etc.)
-  await tester.pumpAndSettle(const Duration(seconds: 1));
+    // Build our app and trigger a frame.
+    await tester.pumpWidget(const ExtroPOSApp());
+    // Allow any startup timers/animations to settle (tutorial delay, etc.)
+    await tester.pumpAndSettle(const Duration(seconds: 1));
 
-  // Verify that the mode selection screen is shown
-  expect(find.text('ExtroPOS'), findsWidgets);
+    // Verify that the mode selection screen is shown
+    expect(find.text('ExtroPOS'), findsWidgets);
   });
 }

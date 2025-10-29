@@ -149,9 +149,12 @@ class _SetupScreenState extends State<SetupScreen> {
                       keyboardType: TextInputType.number,
                       obscureText: true,
                       validator: (v) {
-                        if (v == null || v.trim().isEmpty) return 'Enter a PIN';
-                        if (v.trim().length < 3)
+                        if (v == null || v.trim().isEmpty) {
+                          return 'Enter a PIN';
+                        }
+                        if (v.trim().length < 3) {
                           return 'PIN must be at least 3 digits';
+                        }
                         return null;
                       },
                     ),
