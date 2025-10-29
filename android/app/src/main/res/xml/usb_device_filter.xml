@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Match USB printers by interface class 7 (Printer). This lets the
+         app appear as a handler when a USB printer is attached on devices
+         that deliver the attach intent to activities. -->
+    <usb-device class="7" />
+</resources>

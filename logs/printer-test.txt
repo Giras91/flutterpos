@@ -1,0 +1,317 @@
+--------- beginning of main
+10-27 16:32:05.246 22623 22623 D PrinterPlugin: onMethodCall: discoverPrinters args=null
+10-27 16:32:18.696 22623 22623 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:32:18.698 22623 25450 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: NETWORK print error
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:18.717 22623 25450 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:18.718 22623 25450 D PrinterPlugin: NETWORK: connection closed
+10-27 16:32:42.448 22623 22623 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761553960333, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:32:42.451 22623 25512 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:32:42.779 22623 25512 D PrinterPlugin: NETWORK: print successful via ESCPOS SDK
+10-27 16:32:42.782 22623 25512 D PrinterPlugin: NETWORK: connection closed
+10-27 16:32:45.302 22623 22623 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761553960333, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:32:45.304 22623 25517 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: NETWORK print error
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:45.316 22623 25517 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:45.316 22623 25517 D PrinterPlugin: NETWORK: connection closed
+10-27 16:32:48.143 22623 22623 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761553960333, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:32:48.146 22623 25527 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: NETWORK print error
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:48.163 22623 25527 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:32:48.164 22623 25527 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:32:48.165 22623 25527 D PrinterPlugin: NETWORK: connection closed
+10-27 16:40:31.543 23548 23548 D PrinterPlugin: onMethodCall: discoverPrinters args=null
+10-27 16:42:19.552 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:19.555 23548 28215 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: NETWORK print error
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:19.578 23548 28215 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:19.579 23548 28215 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:22.676 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:22.678 23548 28220 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:23.013 23548 28220 D PrinterPlugin: NETWORK: print successful via ESCPOS SDK
+10-27 16:42:23.017 23548 28220 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:25.316 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:25.318 23548 28227 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: NETWORK print error
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:25.333 23548 28227 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:25.334 23548 28227 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:25.335 23548 28227 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:27.369 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:27.372 23548 28230 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: NETWORK print error
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:27.387 23548 28230 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:27.388 23548 28230 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:29.563 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:29.565 23548 28235 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: NETWORK print error
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:29.582 23548 28235 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:29.583 23548 28235 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:31.454 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:31.456 23548 28238 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: NETWORK print error
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:31.470 23548 28238 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:31.471 23548 28238 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:31.472 23548 28238 D PrinterPlugin: NETWORK: connection closed
+10-27 16:42:33.613 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:42:33.615 23548 28241 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: NETWORK print error
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:33.631 23548 28241 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:42:33.632 23548 28241 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:42:33.633 23548 28241 D PrinterPlugin: NETWORK: connection closed
+10-27 16:43:05.431 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:43:05.433 23548 28360 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: NETWORK print error
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:05.449 23548 28360 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:05.449 23548 28360 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:05.450 23548 28360 D PrinterPlugin: NETWORK: connection closed
+10-27 16:43:08.233 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:43:08.235 23548 28365 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: NETWORK print error
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:08.250 23548 28365 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:08.251 23548 28365 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:08.252 23548 28365 D PrinterPlugin: NETWORK: connection closed
+10-27 16:43:11.022 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:43:11.024 23548 28370 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: NETWORK print error
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:11.038 23548 28370 E PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: NETWORK error: com.dantsu.escposprinter.exceptions.EscPosConnectionException: Unable to connect to TCP device.
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:69)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.dantsu.escposprinter.connection.tcp.TcpConnection.connect(TcpConnection.java:12)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinterCommands.connect(EscPosPrinterCommands.java:310)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:54)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.dantsu.escposprinter.EscPosPrinter.<init>(EscPosPrinter.java:27)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.printToNetworkPrinter$lambda$2(PrinterPlugin.kt:365)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin.$r8$lambda$aRw9Tkn0xBhvwWY7A0kGMJp2_us(Unknown Source:0)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at com.extrotarget.extropos.PrinterPlugin$$ExternalSyntheticLambda0.run(D8$$SyntheticClass:0)
+10-27 16:43:11.039 23548 28370 D PrinterPlugin: 	at java.lang.Thread.run(Thread.java:1119)
+10-27 16:43:11.040 23548 28370 D PrinterPlugin: NETWORK: connection closed
+10-27 16:46:58.489 23548 23548 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554536096, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:46:58.490 23548 28800 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100 using ESCPOS SDK
+10-27 16:46:58.812 23548 28800 D PrinterPlugin: NETWORK: print successful via ESCPOS SDK
+10-27 16:46:58.813 23548 28800 D PrinterPlugin: NETWORK: connection closed
+10-27 16:47:17.308 23945 23945 D PrinterPlugin: onMethodCall: discoverPrinters args=null
+10-27 16:47:42.721 23945 23945 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554859984, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:47:42.723 23945 29269 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100
+10-27 16:47:42.811 23945 29269 D PrinterPlugin: NETWORK: print successful, sent 260 bytes
+10-27 16:47:42.812 23945 29269 D PrinterPlugin: NETWORK: socket closed
+10-27 16:47:44.992 23945 23945 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554859984, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:47:44.993 23945 29284 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100
+10-27 16:47:45.015 23945 29284 D PrinterPlugin: NETWORK: print successful, sent 260 bytes
+10-27 16:47:45.016 23945 29284 D PrinterPlugin: NETWORK: socket closed
+10-27 16:47:46.579 23945 23945 D PrinterPlugin: onMethodCall: testPrint args={printerType=network, printerId=1761554859984, connectionDetails={port=9100, ipAddress=192.168.0.115}, paperSize=mm80}
+10-27 16:47:46.581 23945 29286 D PrinterPlugin: NETWORK: connecting to 192.168.0.115:9100
+10-27 16:47:46.606 23945 29286 D PrinterPlugin: NETWORK: print successful, sent 260 bytes
+10-27 16:47:46.606 23945 29286 D PrinterPlugin: NETWORK: socket closed
+10-27 16:49:49.012 23945 23945 D PrinterPlugin: onMethodCall: discoverPrinters args=null
