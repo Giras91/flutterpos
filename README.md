@@ -1,45 +1,118 @@
-# flutterpos
+# FlutterPOS
 
-A new Flutter project.
+FlutterPOS is a cross-platform Point-of-Sale application built with Flutter. It
+supports three business modes (Retail, Cafe, Restaurant) and is designed to
+work on desktop (Windows, Linux, macOS), mobile (Android/iOS) and web with a
+focus on responsive layouts so the same app can be used on phones, tablets,
+and fixed POS terminals.
 
-## Getting Started
+This repository contains the application code, local persistence (SQLite
+via `sqflite`/FFI and SharedPreferences), and a small visual/functional test
+harness used during development.
 
-This project is a starting point for a Flutter application.
+## Key features
 
-A few resources to get you started if this is your first Flutter project:
+- Multi-mode POS
+  - Retail mode: direct checkout and a cart sidebar
+  - Cafe mode: order-by-number workflow with active orders list
+  - Restaurant mode: table management and per-table orders
+- Pricing & charges
+  - Tax and service charge support (toggleable in Business Info)
+  - Subtotal / tax / service / total calculation pattern centralized via
+    `BusinessInfo` settings
+- Persistence
+  - Local SQLite database (schema, migrations, seeded defaults)
+  - SharedPreferences for simple app-level flags (first-run setup, tutorial)
+- Import / export
+  - Import items from CSV/JSON
+  - Export orders to CSV with metadata
+- Printing & hardware
+  - Receipt and kitchen printer configurations (network/USB/Bluetooth)
+  - Dual-display customer screen support (for supported hardware)
+- Responsive UI
+  - Defensive, scrollable layouts for small/narrow viewports (phone portrait)
+  - `lib/widgets/responsive_layout.dart` provides small helpers and breakpoints
+- Developer & testing
+  - Visual/responsive tests (widget tests sized for phones/tablets/desktops)
+  - Helper commands and a `Setup` flow for first-run configuration
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## Project structure (high level)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+lib/
+  main.dart                 # App entry and startup wiring
+  models/                   # Data models (Product, CartItem, Table, etc.)
+  screens/                  # All UI screens (POS, Settings, Management)
+  services/                 # DB helpers, ConfigService, ResetService, etc.
+  widgets/                  # Reusable components (ProductCard, CartItemWidget)
+test/                       # Widget/unit/visual tests
+docs/                       # PR drafts, design notes
+```
 
-## Responsive & Orientation
+## Running locally
 
-This project now includes a small responsive helper widget to make the UI adapt
-to portrait and landscape orientations and to different screen sizes (phone,
-tablet, desktop).
+1. Install Flutter and required platform toolchains. See https://flutter.dev
+2. Resolve dependencies:
 
-- `lib/widgets/responsive_layout.dart` provides `ResponsiveLayout` which
-	exposes simple breakpoints and a `columns` hint. Wrap pages or the app
-	entry with `ResponsiveLayout` and adapt layouts using the `columns` value.
+```bash
+flutter pub get
+```
 
-- `lib/main.dart` is updated to wrap the home screen with `ResponsiveLayout`.
+3. Run analyzer and tests:
 
-Platform orientation tips:
+```bash
+flutter analyze
+flutter test
+```
 
-- Android: The default activity allows both portrait and landscape. If you
-	constrained orientation previously, remove `android:screenOrientation` or
-	set it to `unspecified` in `android/app/src/main/AndroidManifest.xml`.
+4. Run the app (desktop example on Linux):
 
-- iOS: In Xcode / `ios/Runner/Info.plist` ensure the supported interface
-	orientations include both portrait and landscape entries (UIInterfaceOrientatio
-	ns). For Flutter apps this is typically configured in the Xcode project
-	deployment info.
+```bash
+flutter run -d linux
+```
 
-Notes:
-- The responsive helper is intentionally small — for full responsiveness you
-	should audit key screens (product grid, cart sidebar, table grid) and use
-	the `columns` or `isPortrait` values to switch between stacked and side-by-side
-	layouts.
+Or run on an attached Android device:
+
+```bash
+flutter devices
+flutter run -d <device-id>
+```
+
+## First run / Setup
+
+On first start the app displays a lightweight `Setup` flow to collect your
+store name and an initial admin account. These values are stored in
+`SharedPreferences` and the admin account is persisted to the local database.
+You can reset this with the Settings -> Reset Setup option (it supports an
+optional database backup before resetting).
+
+## Tests
+
+- Widget tests live in `test/` and include responsive/visual checks. Run them
+  with `flutter test`.
+- If you modify layout code that affects screen size behavior, run the
+  responsive widget tests at small sizes (360x800 or similar) to detect
+  overflows early.
+
+## Contributing
+
+Contributions are welcome. Typical workflow:
+
+1. Fork the repo and create a branch from `main`.
+2. Make changes and add tests for new behavior.
+3. Run `flutter analyze` and `flutter test` locally.
+4. Push the branch and open a PR with a clear description. See
+   `docs/PR_DRAFT.md` for a sample PR body used in this project.
+
+## Where to look next
+
+- `lib/screens/*` — POS screens and management UIs
+- `lib/services/*` — Database helper, `ConfigService`, `ResetService`
+- `lib/widgets/responsive_layout.dart` — small helper for breakpoints
+
+## License & credits
+
+This project is provided as-is for demonstration and development. Check the
+repository for a LICENSE file if you plan to redistribute or relicense.
+
+If you want me to push changes or open a PR (I already pushed `responsive/layout-fixes`), I can help with the PR description or CI next.
