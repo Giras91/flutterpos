@@ -11,6 +11,7 @@ import 'tables_management_screen.dart';
 import 'business_info_screen.dart';
 import 'payment_methods_management_screen.dart';
 import 'receipt_settings_screen.dart';
+import 'key_backup_screen.dart';
 import 'sales_history_screen.dart';
 import 'categories_management_screen.dart';
 import 'items_management_screen.dart';
@@ -208,6 +209,20 @@ class SettingsScreen extends StatelessWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => const ReceiptSettingsScreen(),
+                    ),
+                  );
+                },
+              ),
+              _SettingsTile(
+                icon: Icons.lock_clock,
+                title: 'Encryption Key Backup',
+                subtitle:
+                    'Export or import the AES key used for PIN encryption',
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const KeyBackupScreen(),
                     ),
                   );
                 },

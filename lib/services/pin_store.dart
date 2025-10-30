@@ -37,12 +37,17 @@ class PinStore {
       await Hive.openBox(_boxName);
     }
     _box = Hive.box(_boxName);
+    // Intentionally avoid noisy debug output here in normal runs.
   }
 
   String _userPinKey(String userId) => 'pin_user_$userId';
 
   Future<void> setPinForUser(String userId, String pin) async {
     await _box?.put(_userPinKey(userId), pin);
+    if (kDebugMode) {
+      // Debug: do not print the PIN value. Print only existence and length.
+      print('PinStore: setPinForUser userId=$userId pinLength=${pin.length}');
+    }
   }
 
   String? getPinForUser(String userId) {
@@ -58,7 +63,13 @@ class PinStore {
       if (key is String && key.startsWith('pin_user_')) {
         final v = _box!.get(key);
         if (v != null && v.toString() == pin) {
-          return key.replaceFirst('pin_user_', '');
+          final userId = key.replaceFirst('pin_user_', '');
+          if (kDebugMode) {
+            print(
+              'PinStore: getUserIdForPin match userId=$userId pinLength=${pin.length}',
+            );
+          }
+          return userId;
         }
       }
     }
@@ -85,6 +96,7 @@ class PinStore {
           );
         }
       }
+      // migration count intentionally not logged to reduce noise
     } catch (e) {
       // Non-fatal: log in debug
       if (kDebugMode) {
@@ -95,11 +107,17 @@ class PinStore {
 
   Future<void> setAdminPin(String pin) async {
     await _box?.put(_adminPinKey, pin);
+    if (kDebugMode) {
+      print('PinStore: setAdminPin saved pinLength=${pin.length}');
+    }
   }
 
   String? getAdminPin() {
     final v = _box?.get(_adminPinKey);
     if (v == null) return null;
+    if (kDebugMode) {
+      print('PinStore: getAdminPin returning pinLength=${v.toString().length}');
+    }
     return v.toString();
   }
 
