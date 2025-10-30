@@ -1,5 +1,7 @@
 # FlutterPOS
 
+[![CI](https://github.com/Giras91/flutterpos/actions/workflows/ci.yml/badge.svg)](https://github.com/Giras91/flutterpos/actions/workflows/ci.yml)
+
 FlutterPOS is a cross-platform Point-of-Sale application built with Flutter. It
 supports three business modes (Retail, Cafe, Restaurant) and is designed to
 work on desktop (Windows, Linux, macOS), mobile (Android/iOS) and web with a
