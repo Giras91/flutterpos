@@ -343,19 +343,23 @@ class SettingsScreen extends StatelessWidget {
                               const SizedBox(height: 12),
                               CheckboxListTile(
                                 value: backup,
-                                onChanged: (v) => setState(() => backup = v ?? false),
+                                onChanged: (v) =>
+                                    setState(() => backup = v ?? false),
                                 title: const Text(
                                   'Create backup before resetting',
                                 ),
-                                controlAffinity: ListTileControlAffinity.leading,
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
                               ),
                               CheckboxListTile(
                                 value: resetDb,
-                                onChanged: (v) => setState(() => resetDb = v ?? false),
+                                onChanged: (v) =>
+                                    setState(() => resetDb = v ?? false),
                                 title: const Text(
                                   'Also reset database to factory defaults',
                                 ),
-                                controlAffinity: ListTileControlAffinity.leading,
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
                               ),
                             ],
                           ),
@@ -409,7 +413,8 @@ class SettingsScreen extends StatelessWidget {
 
                   if (doBackup) {
                     try {
-                      final backupPath = await DatabaseHelper.instance.backupDatabase();
+                      final backupPath = await DatabaseHelper.instance
+                          .backupDatabase();
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(

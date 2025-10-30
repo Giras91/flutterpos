@@ -6,6 +6,7 @@ import 'widgets/responsive_layout.dart';
 import 'services/guide_service.dart';
 import 'services/config_service.dart';
 import 'screens/setup_screen.dart';
+import 'screens/maintenance_screen.dart';
 import 'services/dual_display_service.dart';
 import 'models/business_info_model.dart';
 
@@ -41,6 +42,10 @@ class ExtroPOSApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // Use ConfigService to decide whether first-run setup is required.
+      routes: {
+        '/setup': (_) => const SetupScreen(),
+        '/maintenance': (_) => const MaintenanceScreen(),
+      },
       home: Builder(
         builder: (context) {
           // ConfigService is initialized in main(); read the flag directly.

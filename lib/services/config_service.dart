@@ -26,4 +26,10 @@ class ConfigService {
   Future<void> setStoreName(String name) async {
     await _prefs?.setString(_keyStoreName, name);
   }
+
+  /// Reset setup-related keys (marks app as not setup and clears store name)
+  Future<void> resetSetup() async {
+    await _prefs?.remove(_keyIsSetupDone);
+    await _prefs?.remove(_keyStoreName);
+  }
 }
