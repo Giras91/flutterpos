@@ -1,5 +1,6 @@
 import '../models/user_model.dart';
 import 'database_service.dart';
+import 'pin_store.dart';
 
 /// Lightweight wrapper around DatabaseService to expose user-related operations.
 class UserService {
@@ -20,13 +21,11 @@ class UserService {
 
   /// Find the first active user matching the provided PIN (exact match).
   Future<User?> findByPin(String pin) async {
-    final all = await getAllUsers();
-    try {
-      return all.firstWhere(
-        (u) => u.pin == pin && u.status == UserStatus.active,
-      );
-    } catch (e) {
-      return null;
-    }
+    // Look up the user id from the encrypted PinStore
+    final userId = PinStore.instance.getUserIdForPin(pin);
+    if (userId == null) return null;
+    final user = await getById(userId);
+    if (user == null) return null;
+    return user.status == UserStatus.active ? user : null;
   }
 }

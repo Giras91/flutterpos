@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../services/pin_store.dart';
 
 class UsersManagementScreen extends StatefulWidget {
   const UsersManagementScreen({super.key});
@@ -16,7 +17,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Admin User',
       email: 'admin@flutterpos.com',
       role: UserRole.admin,
-      pin: '1234',
       status: UserStatus.active,
       phoneNumber: '+60123456789',
       lastLoginAt: DateTime.now().subtract(const Duration(hours: 2)),
@@ -27,7 +27,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Sarah Manager',
       email: 'sarah@flutterpos.com',
       role: UserRole.manager,
-      pin: '2345',
       status: UserStatus.active,
       phoneNumber: '+60123456788',
       lastLoginAt: DateTime.now().subtract(const Duration(hours: 5)),
@@ -38,7 +37,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'John Cashier',
       email: 'john@flutterpos.com',
       role: UserRole.cashier,
-      pin: '3456',
       status: UserStatus.active,
       phoneNumber: '+60123456787',
       lastLoginAt: DateTime.now().subtract(const Duration(days: 1)),
@@ -49,7 +47,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Mary Waiter',
       email: 'mary@flutterpos.com',
       role: UserRole.waiter,
-      pin: '4567',
       status: UserStatus.active,
       phoneNumber: '+60123456786',
     ),
@@ -59,7 +56,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'David Cashier',
       email: 'david@flutterpos.com',
       role: UserRole.cashier,
-      pin: '5678',
       status: UserStatus.inactive,
       phoneNumber: '+60123456785',
     ),
@@ -419,7 +415,11 @@ class _UserFormDialogState extends State<_UserFormDialog> {
     _fullNameController = TextEditingController(text: widget.user?.fullName ?? '');
     _emailController = TextEditingController(text: widget.user?.email ?? '');
     _phoneController = TextEditingController(text: widget.user?.phoneNumber ?? '');
-    _pinController = TextEditingController(text: widget.user?.pin ?? '');
+  // Load PIN from encrypted PinStore when editing an existing user.
+  final existingPin = widget.user != null
+    ? PinStore.instance.getPinForUser(widget.user!.id) ?? ''
+    : '';
+  _pinController = TextEditingController(text: existingPin);
     _selectedRole = widget.user?.role ?? UserRole.cashier;
     _selectedStatus = widget.user?.status ?? UserStatus.active;
   }
@@ -434,7 +434,7 @@ class _UserFormDialogState extends State<_UserFormDialog> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_usernameController.text.isEmpty ||
         _fullNameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -458,12 +458,16 @@ class _UserFormDialogState extends State<_UserFormDialog> {
       fullName: _fullNameController.text,
       email: _emailController.text,
       role: _selectedRole,
-      pin: _pinController.text,
       status: _selectedStatus,
       phoneNumber: _phoneController.text.isEmpty ? null : _phoneController.text,
       lastLoginAt: widget.user?.lastLoginAt,
       createdAt: widget.user?.createdAt,
     );
+
+    // Persist PIN into encrypted PinStore
+    try {
+      await PinStore.instance.setPinForUser(user.id, _pinController.text);
+    } catch (_) {}
 
     widget.onSave(user);
     Navigator.pop(context);
