@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/lock_manager.dart';
 import '../models/business_mode.dart';
 import '../services/app_settings.dart';
 import '../widgets/tutorial_overlay.dart';
@@ -25,7 +26,7 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
 
   Future<void> _checkFirstTime() async {
     await AppSettings.instance.init();
-    
+
     if (!AppSettings.instance.hasSeenTutorial && mounted) {
       // Show tutorial after a short delay
       Future.delayed(const Duration(milliseconds: 500), () {
@@ -40,9 +41,9 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
 
   void _selectMode(BuildContext context, BusinessMode mode) {
     if (_showTutorial) return; // Prevent selection during tutorial
-    
+
     Widget screen;
-    
+
     switch (mode) {
       case BusinessMode.restaurant:
         screen = const TableSelectionScreen();
@@ -55,10 +56,7 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
         break;
     }
 
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => screen),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => screen));
   }
 
   void _showTutorialDialog() {
@@ -85,27 +83,32 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
     return [
       TutorialStep(
         title: 'Welcome to ExtroPOS!',
-        description: 'Your complete Point of Sale solution for retail, cafe, and restaurant businesses. Let\'s get you started with a quick tour.',
+        description:
+            'Your complete Point of Sale solution for retail, cafe, and restaurant businesses. Let\'s get you started with a quick tour.',
         icon: Icons.waving_hand,
       ),
       TutorialStep(
         title: 'Training Mode',
-        description: 'Use Training Mode to practice without affecting real data. Perfect for learning the system or training new staff members.',
+        description:
+            'Use Training Mode to practice without affecting real data. Perfect for learning the system or training new staff members.',
         icon: Icons.school,
       ),
       TutorialStep(
         title: 'Choose Your Business Type',
-        description: 'Select Retail for product sales, Cafe for quick service, or Restaurant for table service. You can switch between modes anytime.',
+        description:
+            'Select Retail for product sales, Cafe for quick service, or Restaurant for table service. You can switch between modes anytime.',
         icon: Icons.business,
       ),
       TutorialStep(
         title: 'Settings & Configuration',
-        description: 'Access Settings to configure categories, items, printers, users, and more. Customize ExtroPOS to fit your business needs.',
+        description:
+            'Access Settings to configure categories, items, printers, users, and more. Customize ExtroPOS to fit your business needs.',
         icon: Icons.settings,
       ),
       TutorialStep(
         title: 'Ready to Start!',
-        description: 'You\'re all set! Select a business mode to begin. Need help? Look for the guide icon throughout the app.',
+        description:
+            'You\'re all set! Select a business mode to begin. Need help? Look for the guide icon throughout the app.',
         icon: Icons.check_circle,
       ),
     ];
@@ -115,6 +118,22 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        // Top-right logout button
+        Positioned(
+          top: 8,
+          right: 8,
+          child: SafeArea(
+            child: IconButton(
+              icon: const Icon(Icons.logout, color: Colors.white),
+              tooltip: 'Lock / Logout',
+              onPressed: () {
+                // Lock the app and navigate to lock screen
+                LockManager.instance.lock();
+                Navigator.pushReplacementNamed(context, '/lock');
+              },
+            ),
+          ),
+        ),
         Scaffold(
           backgroundColor: const Color(0xFF2563EB),
           floatingActionButton: FloatingActionButton(
@@ -135,178 +154,190 @@ class _ModeSelectionScreenState extends State<ModeSelectionScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                  // Logo/Title
-                  const Icon(
-                    Icons.store,
-                    size: 80,
-                    color: Colors.white,
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'ExtroPOS',
-                    style: TextStyle(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Select Business Mode',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white.withValues(alpha: 0.9),
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  
-                  // Training Mode Toggle & Help Button
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-                    margin: const EdgeInsets.symmetric(horizontal: 40),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.15),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        width: 1,
+                    // Logo/Title
+                    const Icon(Icons.store, size: 80, color: Colors.white),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'ExtroPOS',
+                      style: TextStyle(
+                        fontSize: 48,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.school,
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        const SizedBox(width: 12),
-                        const Text(
-                          'Training Mode',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        AnimatedBuilder(
-                          animation: AppSettings.instance,
-                          builder: (context, child) {
-                            return Switch(
-                              value: AppSettings.instance.isTrainingMode,
-                              onChanged: (value) {
-                                AppSettings.instance.setTrainingMode(value);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      value
-                                          ? 'Training Mode enabled - Practice safely!'
-                                          : 'Training Mode disabled - Using real data',
-                                    ),
-                                    backgroundColor: value ? Colors.orange : Colors.green,
-                                    behavior: SnackBarBehavior.floating,
-                                  ),
-                                );
-                              },
-                thumbColor: WidgetStateProperty.resolveWith((states) =>
-                  states.contains(WidgetState.selected) ? Colors.orange : null),
-                trackColor: WidgetStateProperty.resolveWith((states) =>
-                  states.contains(WidgetState.selected) ? Colors.orange.shade200 : null),
-                            );
-                          },
-                        ),
-                        const SizedBox(width: 8),
-                        IconButton(
-                          onPressed: _showTutorialDialog,
-                          icon: const Icon(Icons.help_outline),
-                          color: Colors.white,
-                          tooltip: 'Show Tutorial',
-                        ),
-                      ],
+                    const SizedBox(height: 8),
+                    Text(
+                      'Select Business Mode',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
                     ),
-                  ),
-                  
-                  const SizedBox(height: 24),
-                  
-                  // Training Mode Banner
-                  AnimatedBuilder(
-                    animation: AppSettings.instance,
-                    builder: (context, child) {
-                      if (!AppSettings.instance.isTrainingMode) {
-                        return const SizedBox.shrink();
-                      }
-                      return Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 24,
-                          vertical: 12,
+                    const SizedBox(height: 24),
+
+                    // Training Mode Toggle & Help Button
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 16,
+                      ),
+                      margin: const EdgeInsets.symmetric(horizontal: 40),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.15),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.3),
+                          width: 1,
                         ),
-                        decoration: BoxDecoration(
-                          color: Colors.orange,
-                          borderRadius: BorderRadius.circular(8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withValues(alpha: 0.2),
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.info, color: Colors.white, size: 20),
-                            const SizedBox(width: 8),
-                            const Text(
-                              'TRAINING MODE ACTIVE - Data will not be saved',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 14,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                  
-                  // Mode Cards
-                  LayoutBuilder(
-                    builder: (context, constraints) {
-                      // Use Wrap for better responsiveness and to avoid overflow
-                      return Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 24,
-                        runSpacing: 24,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          _ModeCard(
-                            mode: BusinessMode.retail,
-                            icon: Icons.shopping_bag,
-                            onTap: () => _selectMode(context, BusinessMode.retail),
+                          Icon(Icons.school, color: Colors.white, size: 24),
+                          const SizedBox(width: 12),
+                          const Text(
+                            'Training Mode',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                          _ModeCard(
-                            mode: BusinessMode.cafe,
-                            icon: Icons.local_cafe,
-                            onTap: () => _selectMode(context, BusinessMode.cafe),
+                          const SizedBox(width: 12),
+                          AnimatedBuilder(
+                            animation: AppSettings.instance,
+                            builder: (context, child) {
+                              return Switch(
+                                value: AppSettings.instance.isTrainingMode,
+                                onChanged: (value) {
+                                  AppSettings.instance.setTrainingMode(value);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content: Text(
+                                        value
+                                            ? 'Training Mode enabled - Practice safely!'
+                                            : 'Training Mode disabled - Using real data',
+                                      ),
+                                      backgroundColor: value
+                                          ? Colors.orange
+                                          : Colors.green,
+                                      behavior: SnackBarBehavior.floating,
+                                    ),
+                                  );
+                                },
+                                thumbColor: WidgetStateProperty.resolveWith(
+                                  (states) =>
+                                      states.contains(WidgetState.selected)
+                                      ? Colors.orange
+                                      : null,
+                                ),
+                                trackColor: WidgetStateProperty.resolveWith(
+                                  (states) =>
+                                      states.contains(WidgetState.selected)
+                                      ? Colors.orange.shade200
+                                      : null,
+                                ),
+                              );
+                            },
                           ),
-                          _ModeCard(
-                            mode: BusinessMode.restaurant,
-                            icon: Icons.restaurant,
-                            onTap: () => _selectMode(context, BusinessMode.restaurant),
+                          const SizedBox(width: 8),
+                          IconButton(
+                            onPressed: _showTutorialDialog,
+                            icon: const Icon(Icons.help_outline),
+                            color: Colors.white,
+                            tooltip: 'Show Tutorial',
                           ),
                         ],
-                      );
-                    },
-                  ),
-                ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Training Mode Banner
+                    AnimatedBuilder(
+                      animation: AppSettings.instance,
+                      builder: (context, child) {
+                        if (!AppSettings.instance.isTrainingMode) {
+                          return const SizedBox.shrink();
+                        }
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 20),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 24,
+                            vertical: 12,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(8),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.info,
+                                color: Colors.white,
+                                size: 20,
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'TRAINING MODE ACTIVE - Data will not be saved',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    // Mode Cards
+                    LayoutBuilder(
+                      builder: (context, constraints) {
+                        // Use Wrap for better responsiveness and to avoid overflow
+                        return Wrap(
+                          alignment: WrapAlignment.center,
+                          spacing: 24,
+                          runSpacing: 24,
+                          children: [
+                            _ModeCard(
+                              mode: BusinessMode.retail,
+                              icon: Icons.shopping_bag,
+                              onTap: () =>
+                                  _selectMode(context, BusinessMode.retail),
+                            ),
+                            _ModeCard(
+                              mode: BusinessMode.cafe,
+                              icon: Icons.local_cafe,
+                              onTap: () =>
+                                  _selectMode(context, BusinessMode.cafe),
+                            ),
+                            _ModeCard(
+                              mode: BusinessMode.restaurant,
+                              icon: Icons.restaurant,
+                              onTap: () =>
+                                  _selectMode(context, BusinessMode.restaurant),
+                            ),
+                          ],
+                        );
+                      },
+                    ),
+                  ],
+                ),
               ),
-            ),
             ),
           ),
         ),
-        
+
         // Tutorial Overlay
         if (_showTutorial)
           TutorialOverlay(
@@ -350,11 +381,7 @@ class _ModeCard extends StatelessWidget {
                   color: const Color(0xFF2563EB).withValues(alpha: 0.1),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  icon,
-                  size: 64,
-                  color: const Color(0xFF2563EB),
-                ),
+                child: Icon(icon, size: 64, color: const Color(0xFF2563EB)),
               ),
               const SizedBox(height: 24),
               Flexible(
@@ -374,10 +401,7 @@ class _ModeCard extends StatelessWidget {
                 textAlign: TextAlign.center,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
               ),
             ],
           ),

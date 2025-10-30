@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'pin_store.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -18,11 +19,13 @@ class DatabaseHelper {
   }
 
   Future<Database> _initDB(String filePath) async {
-    final path = _overrideDatabaseFilePath ?? join(await getDatabasesPath(), filePath);
+    final path =
+        _overrideDatabaseFilePath ?? join(await getDatabasesPath(), filePath);
 
     return await openDatabase(
       path,
-      version: 3,
+      // bump DB version to allow migrations for table schema changes
+      version: 5,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -46,7 +49,7 @@ class DatabaseHelper {
         "UPDATE receipt_settings SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')",
       );
     }
-    
+
     if (oldVersion < 3) {
       // v3: Add category_ids column to modifier_groups
       await db.execute(
@@ -56,6 +59,99 @@ class DatabaseHelper {
       await db.execute(
         "UPDATE modifier_groups SET updated_at = strftime('%Y-%m-%dT%H:%M:%fZ','now')",
       );
+    }
+
+    if (oldVersion < 4) {
+      // v4: Add compatibility columns to tables to support newer code that
+      // expects `name`, `capacity`, `occupied_since`, and `customer_name`.
+      // Keep original `number` and `seats` columns for backward compatibility.
+      try {
+        await db.execute("ALTER TABLE tables ADD COLUMN name TEXT DEFAULT ''");
+      } catch (_) {}
+      try {
+        await db.execute(
+          "ALTER TABLE tables ADD COLUMN capacity INTEGER DEFAULT 0",
+        );
+      } catch (_) {}
+      try {
+        await db.execute("ALTER TABLE tables ADD COLUMN occupied_since TEXT");
+      } catch (_) {}
+      try {
+        await db.execute("ALTER TABLE tables ADD COLUMN customer_name TEXT");
+      } catch (_) {}
+
+      // Migrate existing values from number/seats where available
+      try {
+        await db.execute(
+          "UPDATE tables SET name = 'Table ' || number WHERE (name IS NULL OR name = '') AND number IS NOT NULL",
+        );
+      } catch (_) {}
+      try {
+        await db.execute(
+          "UPDATE tables SET capacity = seats WHERE (capacity IS NULL OR capacity = 0) AND seats IS NOT NULL",
+        );
+      } catch (_) {}
+    }
+
+    if (oldVersion < 5) {
+      // v5: Remove plaintext `pin` column from users table. PINs are now
+      // persisted in the encrypted Hive PinStore. SQLite doesn't support
+      // dropping a column directly, so recreate the users table without the
+      // `pin` column and copy over data.
+      try {
+        // If there are plaintext pins in the existing DB, move them into the
+        // PinStore first (PinStore should be initialized by main before DB open).
+        try {
+          final List<Map<String, Object?>> rows = await db.query(
+            'users',
+            columns: ['id', 'pin'],
+          );
+          for (final r in rows) {
+            final id = (r['id'] ?? '').toString();
+            final pin = (r['pin'] as String?) ?? '';
+            if (id.isNotEmpty && pin.isNotEmpty) {
+              try {
+                await PinStore.instance.setPinForUser(id, pin);
+              } catch (_) {}
+            }
+          }
+        } catch (_) {
+          // If the column doesn't exist or query fails, continue — we'll still
+          // proceed to recreate the table without the column below.
+        }
+
+        await db.execute('''
+          CREATE TABLE users_new (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT,
+            role TEXT NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+          )
+        ''');
+
+        await db.execute('''
+          INSERT INTO users_new (id, name, email, role, is_active, created_at, updated_at)
+          SELECT id, name, email, role, is_active, created_at, updated_at FROM users
+        ''');
+
+        await db.execute('DROP TABLE users');
+        await db.execute("ALTER TABLE users_new RENAME TO users");
+
+        // Recreate users indexes that might have been dropped during table swap
+        try {
+          await db.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)',
+          );
+          await db.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active)',
+          );
+        } catch (_) {}
+      } catch (_) {
+        // If migration fails for any reason, ignore and allow older codepaths to continue.
+      }
     }
   }
 
@@ -126,7 +222,6 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         email TEXT,
-        pin TEXT NOT NULL,
         role TEXT NOT NULL,
         is_active INTEGER DEFAULT 1,
         created_at TEXT NOT NULL,
@@ -377,8 +472,12 @@ class DatabaseHelper {
 
   Future<void> _createIndexes(Database db) async {
     // Categories indexes
-    await db.execute('CREATE INDEX idx_categories_active ON categories(is_active)');
-    await db.execute('CREATE INDEX idx_categories_sort ON categories(sort_order)');
+    await db.execute(
+      'CREATE INDEX idx_categories_active ON categories(is_active)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_categories_sort ON categories(sort_order)',
+    );
 
     // Items indexes
     await db.execute('CREATE INDEX idx_items_category ON items(category_id)');
@@ -394,12 +493,20 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX idx_orders_table ON orders(table_id)');
 
     // Order Items indexes
-    await db.execute('CREATE INDEX idx_order_items_order ON order_items(order_id)');
-    await db.execute('CREATE INDEX idx_order_items_item ON order_items(item_id)');
+    await db.execute(
+      'CREATE INDEX idx_order_items_order ON order_items(order_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_order_items_item ON order_items(item_id)',
+    );
 
     // Transactions indexes
-    await db.execute('CREATE INDEX idx_transactions_order ON transactions(order_id)');
-    await db.execute('CREATE INDEX idx_transactions_date ON transactions(transaction_date)');
+    await db.execute(
+      'CREATE INDEX idx_transactions_order ON transactions(order_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_transactions_date ON transactions(transaction_date)',
+    );
 
     // Users indexes
     await db.execute('CREATE INDEX idx_users_email ON users(email)');
@@ -410,27 +517,49 @@ class DatabaseHelper {
     await db.execute('CREATE INDEX idx_tables_number ON tables(number)');
 
     // Inventory adjustments indexes
-    await db.execute('CREATE INDEX idx_inventory_item ON inventory_adjustments(item_id)');
-    await db.execute('CREATE INDEX idx_inventory_date ON inventory_adjustments(created_at)');
+    await db.execute(
+      'CREATE INDEX idx_inventory_item ON inventory_adjustments(item_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_inventory_date ON inventory_adjustments(created_at)',
+    );
 
     // Cash sessions indexes
-    await db.execute('CREATE INDEX idx_cash_sessions_user ON cash_sessions(user_id)');
-    await db.execute('CREATE INDEX idx_cash_sessions_status ON cash_sessions(status)');
-    await db.execute('CREATE INDEX idx_cash_sessions_date ON cash_sessions(opened_at)');
+    await db.execute(
+      'CREATE INDEX idx_cash_sessions_user ON cash_sessions(user_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_cash_sessions_status ON cash_sessions(status)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_cash_sessions_date ON cash_sessions(opened_at)',
+    );
 
     // Audit log indexes
     await db.execute('CREATE INDEX idx_audit_user ON audit_log(user_id)');
-    await db.execute('CREATE INDEX idx_audit_entity ON audit_log(entity_type, entity_id)');
+    await db.execute(
+      'CREATE INDEX idx_audit_entity ON audit_log(entity_type, entity_id)',
+    );
     await db.execute('CREATE INDEX idx_audit_date ON audit_log(created_at)');
 
     // Modifier groups indexes
-    await db.execute('CREATE INDEX idx_modifier_groups_active ON modifier_groups(is_active)');
-    await db.execute('CREATE INDEX idx_modifier_groups_sort ON modifier_groups(sort_order)');
+    await db.execute(
+      'CREATE INDEX idx_modifier_groups_active ON modifier_groups(is_active)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_modifier_groups_sort ON modifier_groups(sort_order)',
+    );
 
     // Modifier items indexes
-    await db.execute('CREATE INDEX idx_modifier_items_group ON modifier_items(modifier_group_id)');
-    await db.execute('CREATE INDEX idx_modifier_items_available ON modifier_items(is_available)');
-    await db.execute('CREATE INDEX idx_modifier_items_sort ON modifier_items(sort_order)');
+    await db.execute(
+      'CREATE INDEX idx_modifier_items_group ON modifier_items(modifier_group_id)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_modifier_items_available ON modifier_items(is_available)',
+    );
+    await db.execute(
+      'CREATE INDEX idx_modifier_items_sort ON modifier_items(sort_order)',
+    );
   }
 
   Future<void> _insertDefaultData(Database db) async {
@@ -477,7 +606,6 @@ class DatabaseHelper {
       'id': '1',
       'name': 'Admin',
       'email': 'admin@example.com',
-      'pin': '0000',
       'role': 'admin',
       'is_active': 1,
       'created_at': now,
@@ -485,7 +613,12 @@ class DatabaseHelper {
     });
 
     // Insert default payment methods
-    final paymentMethods = ['Cash', 'Credit Card', 'Debit Card', 'Mobile Payment'];
+    final paymentMethods = [
+      'Cash',
+      'Credit Card',
+      'Debit Card',
+      'Mobile Payment',
+    ];
     for (int i = 0; i < paymentMethods.length; i++) {
       await db.insert('payment_methods', {
         'id': '${i + 1}',
@@ -504,7 +637,9 @@ class DatabaseHelper {
 
   // Helper method to reset database (for development/testing)
   Future<void> resetDatabase() async {
-    final path = _overrideDatabaseFilePath ?? join(await getDatabasesPath(), 'extropos.db');
+    final path =
+        _overrideDatabaseFilePath ??
+        join(await getDatabasesPath(), 'extropos.db');
     try {
       await deleteDatabase(path);
     } catch (_) {
@@ -517,7 +652,9 @@ class DatabaseHelper {
   /// Create a timestamped backup copy of the on-disk database file and
   /// return the absolute path to the backup file. Throws on failure.
   Future<String> backupDatabase() async {
-    final path = _overrideDatabaseFilePath ?? join(await getDatabasesPath(), 'extropos.db');
+    final path =
+        _overrideDatabaseFilePath ??
+        join(await getDatabasesPath(), 'extropos.db');
     final src = File(path);
     if (!await src.exists()) {
       throw Exception('Database file not found at $path');

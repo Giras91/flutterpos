@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/app_settings.dart';
 import '../services/reset_service.dart';
 import '../services/database_helper.dart';
+import '../services/config_service.dart';
+import '../screens/setup_screen.dart';
 import '../services/training_data_generator.dart';
 import 'printers_management_screen.dart';
 import 'users_management_screen.dart';
@@ -163,6 +165,14 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
               _SettingsTile(
+                icon: Icons.vpn_key,
+                title: 'Software Activation',
+                subtitle: 'Enter license key to unlock full features',
+                onTap: () {
+                  Navigator.pushNamed(context, '/activation');
+                },
+              ),
+              _SettingsTile(
                 icon: Icons.attach_money,
                 title: 'Payment Methods',
                 subtitle: 'Configure payment options',
@@ -315,6 +325,158 @@ class SettingsScreen extends StatelessWidget {
                         ),
                         backgroundColor: Colors.orange,
                       ),
+                    );
+                  }
+                },
+              ),
+              _SettingsTile(
+                icon: Icons.restart_alt,
+                title: 'Reset Setup',
+                subtitle: 'Return to first-run setup (clears store name)',
+                onTap: () async {
+                  final result = await showDialog<Map<String, dynamic>>(
+                    context: context,
+                    builder: (context) {
+                      bool resetDb = false;
+                      bool backup = false;
+                      return StatefulBuilder(
+                        builder: (context, setState) => AlertDialog(
+                          title: const Text('Reset Setup'),
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Text(
+                                'This will clear the initial setup flag and store name so the app will show the setup screen on next start. Optionally you can reset the database to factory defaults (this will recreate seeded data).',
+                              ),
+                              const SizedBox(height: 12),
+                              CheckboxListTile(
+                                value: backup,
+                                onChanged: (v) =>
+                                    setState(() => backup = v ?? false),
+                                title: const Text(
+                                  'Create backup before resetting',
+                                ),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                              CheckboxListTile(
+                                value: resetDb,
+                                onChanged: (v) =>
+                                    setState(() => resetDb = v ?? false),
+                                title: const Text(
+                                  'Also reset database to factory defaults',
+                                ),
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                            ],
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.pop(context, {
+                                'confirmed': false,
+                                'resetDb': false,
+                                'backup': false,
+                              }),
+                              child: const Text('Cancel'),
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                              ),
+                              onPressed: () => Navigator.pop(context, {
+                                'confirmed': true,
+                                'resetDb': resetDb,
+                                'backup': backup,
+                              }),
+                              child: const Text('Reset Setup'),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+
+                  if (result == null) return;
+                  final confirmed = result['confirmed'] == true;
+                  final doResetDb = result['resetDb'] == true;
+                  final doBackup = result['backup'] == true;
+                  if (!confirmed) return;
+
+                  // Clear setup flag and store name
+                  try {
+                    await ConfigService.instance.setSetupDone(false);
+                    await ConfigService.instance.setStoreName('');
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('Error clearing setup flag: $e'),
+                          backgroundColor: Colors.red,
+                        ),
+                      );
+                    }
+                    return;
+                  }
+
+                  if (doBackup) {
+                    try {
+                      final backupPath = await DatabaseHelper.instance
+                          .backupDatabase();
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Database backed up to $backupPath'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Backup failed: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                      // Abort reset if backup is requested but fails
+                      return;
+                    }
+                  }
+
+                  if (doResetDb) {
+                    try {
+                      await DatabaseHelper.instance.resetDatabase();
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error resetting database: $e'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
+                      }
+                      return;
+                    }
+                  }
+
+                  // Broadcast in-memory reset and navigate to setup screen
+                  ResetService.instance.triggerReset();
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Setup cleared — showing Setup screen now',
+                        ),
+                        backgroundColor: Colors.orange,
+                      ),
+                    );
+                    // Replace stack with SetupScreen
+                    Navigator.pushAndRemoveUntil(
+                      context,
+                      MaterialPageRoute(builder: (c) => const SetupScreen()),
+                      (route) => false,
                     );
                   }
                 },
