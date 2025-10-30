@@ -11,6 +11,7 @@ import '../models/modifier_group_model.dart';
 import '../models/modifier_item_model.dart';
 import '../models/printer_model.dart';
 import '../models/user_model.dart';
+import 'pin_store.dart';
 import '../models/table_model.dart';
 import '../models/business_info_model.dart';
 import 'database_helper.dart';
@@ -1309,13 +1310,18 @@ class DatabaseService {
     );
 
     return List.generate(maps.length, (i) {
+      final id = maps[i]['id'].toString();
+      // Prefer the encrypted pin if present
+      final pinFromStore = PinStore.instance.getPinForUser(id);
+      final pin = pinFromStore ?? (maps[i]['pin'] as String? ?? '');
+
       return User(
-        id: maps[i]['id'].toString(),
+        id: id,
         username: maps[i]['username'] as String,
         fullName: maps[i]['full_name'] as String,
         email: maps[i]['email'] as String,
         role: UserRole.values[maps[i]['role'] as int],
-        pin: maps[i]['pin'] as String,
+        pin: pin,
         status: UserStatus.values[maps[i]['status'] as int],
         lastLoginAt: maps[i]['last_login_at'] != null
             ? DateTime.parse(maps[i]['last_login_at'] as String)
@@ -1338,13 +1344,16 @@ class DatabaseService {
     if (maps.isEmpty) return null;
 
     final map = maps.first;
+    final idStr = map['id'].toString();
+    final pinFromStore = PinStore.instance.getPinForUser(idStr);
+    final pin = pinFromStore ?? (map['pin'] as String? ?? '');
     return User(
-      id: map['id'].toString(),
+      id: idStr,
       username: map['username'] as String,
       fullName: map['full_name'] as String,
       email: map['email'] as String,
       role: UserRole.values[map['role'] as int],
-      pin: map['pin'] as String,
+      pin: pin,
       status: UserStatus.values[map['status'] as int],
       lastLoginAt: map['last_login_at'] != null
           ? DateTime.parse(map['last_login_at'] as String)
@@ -1357,13 +1366,18 @@ class DatabaseService {
   /// Insert a new user
   Future<int> insertUser(User user) async {
     final db = await DatabaseHelper.instance.database;
+    // Do not store plaintext PIN in DB; store empty string instead. PINs are
+    // persisted in the encrypted Hive PinStore.
+    try {
+      await PinStore.instance.setPinForUser(user.id, user.pin);
+    } catch (_) {}
+
     return await db.insert('users', {
       'id': user.id,
       'username': user.username,
       'full_name': user.fullName,
       'email': user.email,
       'role': user.role.index,
-      'pin': user.pin,
       'status': user.status.index,
       'last_login_at': user.lastLoginAt?.toIso8601String(),
       'created_at': user.createdAt.toIso8601String(),
@@ -1374,6 +1388,9 @@ class DatabaseService {
   /// Update an existing user
   Future<int> updateUser(User user) async {
     final db = await DatabaseHelper.instance.database;
+    try {
+      await PinStore.instance.setPinForUser(user.id, user.pin);
+    } catch (_) {}
     return await db.update(
       'users',
       {
@@ -1381,7 +1398,6 @@ class DatabaseService {
         'full_name': user.fullName,
         'email': user.email,
         'role': user.role.index,
-        'pin': user.pin,
         'status': user.status.index,
         'last_login_at': user.lastLoginAt?.toIso8601String(),
         'phone_number': user.phoneNumber,

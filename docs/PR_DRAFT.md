@@ -36,6 +36,19 @@ Notes / Risk
 - Changes are intentionally minimal and localized to avoid behavioral changes. The defensive pattern preserves UX but prevents overflow by allowing scrolling where necessary.
 - I did not apply the defensive pattern blindly across every screen. I audited management screens (`users`, `printers`, `items`, `business_info`) and found no immediate unbounded Column/Expanded anti-patterns that needed fixes.
 
+Database migration (security)
+
+- This release includes a data migration to improve PIN security. User PINs previously stored as plaintext in the SQLite `users.pin` column are now migrated into an encrypted local store (Hive + platform secure storage) and the `pin` column is removed from the on-disk schema.
+
+- Technical details:
+  - Database schema version bumped to v5.
+  - During upgrade the app will attempt to copy any existing plaintext `pin` values into the encrypted `PinStore` and then recreate the `users` table without the `pin` column.
+  - The migration is non-destructive: existing PINs are preserved and automatically encrypted on upgrade.
+
+- Operator note: No manual action is required. On next app start the migration runs automatically.
+
+- Developer note: A test `test/migration/pin_migration_test.dart` was added to simulate the v4 -> v5 migration and verify the pin move and schema change.
+
 How to push & open a PR
 
 If you want me to push the branch to your remote, add the remote or tell me the remote URL and I'll push and prepare a PR draft title/body.

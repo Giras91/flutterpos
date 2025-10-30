@@ -165,6 +165,14 @@ class SettingsScreen extends StatelessWidget {
                 },
               ),
               _SettingsTile(
+                icon: Icons.vpn_key,
+                title: 'Software Activation',
+                subtitle: 'Enter license key to unlock full features',
+                onTap: () {
+                  Navigator.pushNamed(context, '/activation');
+                },
+              ),
+              _SettingsTile(
                 icon: Icons.attach_money,
                 title: 'Payment Methods',
                 subtitle: 'Configure payment options',

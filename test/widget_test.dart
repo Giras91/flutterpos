@@ -28,7 +28,7 @@ void main() {
     // Allow any startup timers/animations to settle (tutorial delay, etc.)
     await tester.pumpAndSettle(const Duration(seconds: 1));
 
-    // Verify that the mode selection screen is shown
-    expect(find.text('ExtroPOS'), findsWidgets);
+    // After setup is done the app requires unlocking first; verify lock screen
+    expect(find.textContaining('Enter your PIN to unlock'), findsOneWidget);
   });
 }

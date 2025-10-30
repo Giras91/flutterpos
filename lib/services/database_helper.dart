@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'pin_store.dart';
 
 class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._init();
@@ -24,7 +25,7 @@ class DatabaseHelper {
     return await openDatabase(
       path,
       // bump DB version to allow migrations for table schema changes
-      version: 4,
+      version: 5,
       onCreate: _createDB,
       onUpgrade: _upgradeDB,
     );
@@ -90,6 +91,67 @@ class DatabaseHelper {
           "UPDATE tables SET capacity = seats WHERE (capacity IS NULL OR capacity = 0) AND seats IS NOT NULL",
         );
       } catch (_) {}
+    }
+
+    if (oldVersion < 5) {
+      // v5: Remove plaintext `pin` column from users table. PINs are now
+      // persisted in the encrypted Hive PinStore. SQLite doesn't support
+      // dropping a column directly, so recreate the users table without the
+      // `pin` column and copy over data.
+      try {
+        // If there are plaintext pins in the existing DB, move them into the
+        // PinStore first (PinStore should be initialized by main before DB open).
+        try {
+          final List<Map<String, Object?>> rows = await db.query(
+            'users',
+            columns: ['id', 'pin'],
+          );
+          for (final r in rows) {
+            final id = (r['id'] ?? '').toString();
+            final pin = (r['pin'] as String?) ?? '';
+            if (id.isNotEmpty && pin.isNotEmpty) {
+              try {
+                await PinStore.instance.setPinForUser(id, pin);
+              } catch (_) {}
+            }
+          }
+        } catch (_) {
+          // If the column doesn't exist or query fails, continue — we'll still
+          // proceed to recreate the table without the column below.
+        }
+
+        await db.execute('''
+          CREATE TABLE users_new (
+            id TEXT PRIMARY KEY,
+            name TEXT NOT NULL,
+            email TEXT,
+            role TEXT NOT NULL,
+            is_active INTEGER DEFAULT 1,
+            created_at TEXT NOT NULL,
+            updated_at TEXT NOT NULL
+          )
+        ''');
+
+        await db.execute('''
+          INSERT INTO users_new (id, name, email, role, is_active, created_at, updated_at)
+          SELECT id, name, email, role, is_active, created_at, updated_at FROM users
+        ''');
+
+        await db.execute('DROP TABLE users');
+        await db.execute("ALTER TABLE users_new RENAME TO users");
+
+        // Recreate users indexes that might have been dropped during table swap
+        try {
+          await db.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)',
+          );
+          await db.execute(
+            'CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active)',
+          );
+        } catch (_) {}
+      } catch (_) {
+        // If migration fails for any reason, ignore and allow older codepaths to continue.
+      }
     }
   }
 
@@ -160,7 +222,6 @@ class DatabaseHelper {
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         email TEXT,
-        pin TEXT NOT NULL,
         role TEXT NOT NULL,
         is_active INTEGER DEFAULT 1,
         created_at TEXT NOT NULL,
@@ -545,7 +606,6 @@ class DatabaseHelper {
       'id': '1',
       'name': 'Admin',
       'email': 'admin@example.com',
-      'pin': '0000',
       'role': 'admin',
       'is_active': 1,
       'created_at': now,

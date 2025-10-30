@@ -1,5 +1,4 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:extropos/main.dart' show ExtroPOSApp;
@@ -45,9 +44,8 @@ void main() {
       await tester.pumpWidget(const ExtroPOSApp());
       await tester.pumpAndSettle();
 
-      // ModeSelectionScreen contains the large 'ExtroPOS' title
-      expect(find.text('ExtroPOS'), findsOneWidget);
-      expect(find.text('Select Business Mode'), findsOneWidget);
+      // When setup is done the app now presents a lock screen first
+      expect(find.textContaining('Enter your PIN to unlock'), findsOneWidget);
     });
   });
 }

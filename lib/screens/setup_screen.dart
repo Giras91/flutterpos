@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../services/config_service.dart';
 import '../services/database_service.dart';
 import '../models/user_model.dart';
+import '../services/pin_store.dart';
 
 class SetupScreen extends StatefulWidget {
   const SetupScreen({super.key});
@@ -71,6 +72,12 @@ class _SetupScreenState extends State<SetupScreen> {
           pin: pin,
         );
         await DatabaseService.instance.insertUser(user);
+        // Save admin PIN securely in Hive encrypted box for quick unlock
+        try {
+          await PinStore.instance.setAdminPin(pin);
+        } catch (_) {
+          // non-fatal
+        }
       }
     } catch (e) {
       // ignore DB errors but log in debug

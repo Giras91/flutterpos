@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/config_service.dart';
 import '../services/database_helper.dart';
 import '../services/reset_service.dart';
+import '../services/lock_manager.dart';
 
 class MaintenanceScreen extends StatefulWidget {
   const MaintenanceScreen({super.key});
@@ -21,8 +22,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       // Clear setup flag and store name
       await _configService.resetSetup();
 
-  // Reset the on-disk database to factory defaults (re-seeds defaults)
-  await _db.resetDatabase();
+      // Reset the on-disk database to factory defaults (re-seeds defaults)
+      await _db.resetDatabase();
 
       // Broadcast reset to in-memory services
       ResetService.instance.triggerReset();
@@ -35,6 +36,8 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
       );
 
       // Navigate to setup screen (replace stack)
+      // Ensure app is locked after reset
+      LockManager.instance.lock();
       Navigator.pushReplacementNamed(context, '/setup');
     } catch (e) {
       if (mounted) {
