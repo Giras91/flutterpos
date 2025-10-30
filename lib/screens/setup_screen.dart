@@ -43,7 +43,7 @@ class _SetupScreenState extends State<SetupScreen> {
     // Create or update admin user
     try {
       final users = await DatabaseService.instance.getUsers();
-  final String pin = _adminPinCtrl.text.trim();
+      final String pin = _adminPinCtrl.text.trim();
       if (users.isNotEmpty) {
         // Try to find an admin; otherwise update first user
         User? admin = users.firstWhere(
@@ -59,6 +59,8 @@ class _SetupScreenState extends State<SetupScreen> {
         // Persist PIN in the encrypted PinStore and then update the user record
         try {
           await PinStore.instance.setPinForUser(admin.id, pin);
+          // Also set the admin master PIN so LockManager can check it directly.
+          await PinStore.instance.setAdminPin(pin);
         } catch (_) {}
 
         await DatabaseService.instance.updateUser(updated);
@@ -75,13 +77,11 @@ class _SetupScreenState extends State<SetupScreen> {
           role: UserRole.admin,
         );
         await DatabaseService.instance.insertUser(user);
-        // Save admin PIN securely in Hive encrypted box for quick unlock
+        // Save admin PIN securely in Hive encrypted box for quick unlock and
+        // also map the admin user's id to the PIN for per-user lookup.
         try {
           await PinStore.instance.setAdminPin(pin);
-        } catch (_) {
-          // non-fatal
-        }
-        // Also store the admin user's PIN in PinStore for lookup
+        } catch (_) {}
         try {
           await PinStore.instance.setPinForUser(id, pin);
         } catch (_) {}
