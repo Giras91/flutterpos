@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/user_model.dart';
+import '../services/pin_store.dart';
 
 class UsersManagementScreen extends StatefulWidget {
   const UsersManagementScreen({super.key});
@@ -16,7 +17,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Admin User',
       email: 'admin@flutterpos.com',
       role: UserRole.admin,
-      pin: '1234',
       status: UserStatus.active,
       phoneNumber: '+60123456789',
       lastLoginAt: DateTime.now().subtract(const Duration(hours: 2)),
@@ -27,7 +27,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Sarah Manager',
       email: 'sarah@flutterpos.com',
       role: UserRole.manager,
-      pin: '2345',
       status: UserStatus.active,
       phoneNumber: '+60123456788',
       lastLoginAt: DateTime.now().subtract(const Duration(hours: 5)),
@@ -38,7 +37,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'John Cashier',
       email: 'john@flutterpos.com',
       role: UserRole.cashier,
-      pin: '3456',
       status: UserStatus.active,
       phoneNumber: '+60123456787',
       lastLoginAt: DateTime.now().subtract(const Duration(days: 1)),
@@ -49,7 +47,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'Mary Waiter',
       email: 'mary@flutterpos.com',
       role: UserRole.waiter,
-      pin: '4567',
       status: UserStatus.active,
       phoneNumber: '+60123456786',
     ),
@@ -59,7 +56,6 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
       fullName: 'David Cashier',
       email: 'david@flutterpos.com',
       role: UserRole.cashier,
-      pin: '5678',
       status: UserStatus.inactive,
       phoneNumber: '+60123456785',
     ),
@@ -108,9 +104,9 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
 
   void _deleteUser(User user) {
     if (user.role == UserRole.admin) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cannot delete admin user')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Cannot delete admin user')));
       return;
     }
 
@@ -130,9 +126,9 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
                 users.removeWhere((u) => u.id == user.id);
               });
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('User deleted')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('User deleted')));
             },
             child: const Text('Delete', style: TextStyle(color: Colors.red)),
           ),
@@ -166,28 +162,33 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
                   _filterStatus = null;
                 } else if (value.startsWith('role_')) {
                   final role = value.split('_')[1];
-                  _filterRole = UserRole.values.firstWhere((r) => r.name == role);
+                  _filterRole = UserRole.values.firstWhere(
+                    (r) => r.name == role,
+                  );
                 } else if (value.startsWith('status_')) {
                   final status = value.split('_')[1];
-                  _filterStatus = UserStatus.values.firstWhere((s) => s.name == status);
+                  _filterStatus = UserStatus.values.firstWhere(
+                    (s) => s.name == status,
+                  );
                 }
               });
             },
             itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'all',
-                child: Text('All Users'),
+              const PopupMenuItem(value: 'all', child: Text('All Users')),
+              const PopupMenuDivider(),
+              ...UserRole.values.map(
+                (role) => PopupMenuItem(
+                  value: 'role_${role.name}',
+                  child: Text(role.name.toUpperCase()),
+                ),
               ),
               const PopupMenuDivider(),
-              ...UserRole.values.map((role) => PopupMenuItem(
-                    value: 'role_${role.name}',
-                    child: Text(role.name.toUpperCase()),
-                  )),
-              const PopupMenuDivider(),
-              ...UserStatus.values.map((status) => PopupMenuItem(
-                    value: 'status_${status.name}',
-                    child: Text(status.name.toUpperCase()),
-                  )),
+              ...UserStatus.values.map(
+                (status) => PopupMenuItem(
+                  value: 'status_${status.name}',
+                  child: Text(status.name.toUpperCase()),
+                ),
+              ),
             ],
           ),
         ],
@@ -329,9 +330,11 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
                                 size: 20,
                               ),
                               const SizedBox(width: 8),
-                              Text(user.status == UserStatus.active
-                                  ? 'Deactivate'
-                                  : 'Activate'),
+                              Text(
+                                user.status == UserStatus.active
+                                    ? 'Deactivate'
+                                    : 'Activate',
+                              ),
                             ],
                           ),
                         ),
@@ -341,7 +344,10 @@ class _UsersManagementScreenState extends State<UsersManagementScreen> {
                             children: [
                               Icon(Icons.delete, size: 20, color: Colors.red),
                               SizedBox(width: 8),
-                              Text('Delete', style: TextStyle(color: Colors.red)),
+                              Text(
+                                'Delete',
+                                style: TextStyle(color: Colors.red),
+                              ),
                             ],
                           ),
                         ),
@@ -394,10 +400,7 @@ class _UserFormDialog extends StatefulWidget {
   final User? user;
   final Function(User) onSave;
 
-  const _UserFormDialog({
-    this.user,
-    required this.onSave,
-  });
+  const _UserFormDialog({this.user, required this.onSave});
 
   @override
   State<_UserFormDialog> createState() => _UserFormDialogState();
@@ -415,11 +418,21 @@ class _UserFormDialogState extends State<_UserFormDialog> {
   @override
   void initState() {
     super.initState();
-    _usernameController = TextEditingController(text: widget.user?.username ?? '');
-    _fullNameController = TextEditingController(text: widget.user?.fullName ?? '');
+    _usernameController = TextEditingController(
+      text: widget.user?.username ?? '',
+    );
+    _fullNameController = TextEditingController(
+      text: widget.user?.fullName ?? '',
+    );
     _emailController = TextEditingController(text: widget.user?.email ?? '');
-    _phoneController = TextEditingController(text: widget.user?.phoneNumber ?? '');
-    _pinController = TextEditingController(text: widget.user?.pin ?? '');
+    _phoneController = TextEditingController(
+      text: widget.user?.phoneNumber ?? '',
+    );
+    // Load PIN from encrypted PinStore when editing an existing user.
+    final existingPin = widget.user != null
+        ? PinStore.instance.getPinForUser(widget.user!.id) ?? ''
+        : '';
+    _pinController = TextEditingController(text: existingPin);
     _selectedRole = widget.user?.role ?? UserRole.cashier;
     _selectedStatus = widget.user?.status ?? UserStatus.active;
   }
@@ -434,7 +447,7 @@ class _UserFormDialogState extends State<_UserFormDialog> {
     super.dispose();
   }
 
-  void _save() {
+  Future<void> _save() async {
     if (_usernameController.text.isEmpty ||
         _fullNameController.text.isEmpty ||
         _emailController.text.isEmpty ||
@@ -446,9 +459,9 @@ class _UserFormDialogState extends State<_UserFormDialog> {
     }
 
     if (_pinController.text.length != 4) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('PIN must be 4 digits')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('PIN must be 4 digits')));
       return;
     }
 
@@ -458,12 +471,19 @@ class _UserFormDialogState extends State<_UserFormDialog> {
       fullName: _fullNameController.text,
       email: _emailController.text,
       role: _selectedRole,
-      pin: _pinController.text,
       status: _selectedStatus,
       phoneNumber: _phoneController.text.isEmpty ? null : _phoneController.text,
       lastLoginAt: widget.user?.lastLoginAt,
       createdAt: widget.user?.createdAt,
     );
+
+    // Persist PIN into encrypted PinStore
+    try {
+      await PinStore.instance.setPinForUser(user.id, _pinController.text);
+    } catch (_) {}
+
+    // Avoid using BuildContext after an `await` if the widget was disposed.
+    if (!mounted) return;
 
     widget.onSave(user);
     Navigator.pop(context);
@@ -571,10 +591,7 @@ class _UserFormDialogState extends State<_UserFormDialog> {
           onPressed: () => Navigator.pop(context),
           child: const Text('Cancel'),
         ),
-        ElevatedButton(
-          onPressed: _save,
-          child: const Text('Save'),
-        ),
+        ElevatedButton(onPressed: _save, child: const Text('Save')),
       ],
     );
   }

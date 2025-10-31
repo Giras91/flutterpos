@@ -123,18 +123,38 @@ class DatabaseHelper {
         await db.execute('''
           CREATE TABLE users_new (
             id TEXT PRIMARY KEY,
-            name TEXT NOT NULL,
+            username TEXT NOT NULL,
+            full_name TEXT NOT NULL,
             email TEXT,
-            role TEXT NOT NULL,
-            is_active INTEGER DEFAULT 1,
+            role INTEGER NOT NULL,
+            status INTEGER DEFAULT 1,
+            last_login_at TEXT,
             created_at TEXT NOT NULL,
-            updated_at TEXT NOT NULL
+            updated_at TEXT NOT NULL,
+            phone_number TEXT
           )
         ''');
 
+        // Copy data from old users table to new schema.
+        // If the old schema used `name`/`is_active`/`role` as text, map them conservatively:
+        // - username := name
+        // - full_name := name
+        // - role := 0 (unknown) since older role may be TEXT
+        // - status := is_active (if present) else 1
+        // - preserve created_at/updated_at
         await db.execute('''
-          INSERT INTO users_new (id, name, email, role, is_active, created_at, updated_at)
-          SELECT id, name, email, role, is_active, created_at, updated_at FROM users
+          INSERT INTO users_new (id, username, full_name, email, role, status, last_login_at, created_at, updated_at, phone_number)
+          SELECT id,
+                 COALESCE(name, '') AS username,
+                 COALESCE(name, '') AS full_name,
+                 email,
+                 0 AS role,
+                 COALESCE(is_active, 1) AS status,
+                 NULL AS last_login_at,
+                 created_at,
+                 updated_at,
+                 NULL AS phone_number
+          FROM users
         ''');
 
         await db.execute('DROP TABLE users');
@@ -146,7 +166,7 @@ class DatabaseHelper {
             'CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)',
           );
           await db.execute(
-            'CREATE INDEX IF NOT EXISTS idx_users_active ON users(is_active)',
+            'CREATE INDEX IF NOT EXISTS idx_users_status ON users(status)',
           );
         } catch (_) {}
       } catch (_) {
@@ -217,15 +237,19 @@ class DatabaseHelper {
     ''');
 
     // Users Table
+    // Schema expected by DatabaseService and UserModel
     await db.execute('''
       CREATE TABLE users (
         id TEXT PRIMARY KEY,
-        name TEXT NOT NULL,
+        username TEXT NOT NULL,
+        full_name TEXT NOT NULL,
         email TEXT,
-        role TEXT NOT NULL,
-        is_active INTEGER DEFAULT 1,
+        role INTEGER NOT NULL,
+        status INTEGER DEFAULT 1,
+        last_login_at TEXT,
         created_at TEXT NOT NULL,
-        updated_at TEXT NOT NULL
+        updated_at TEXT NOT NULL,
+        phone_number TEXT
       )
     ''');
 
@@ -510,7 +534,8 @@ class DatabaseHelper {
 
     // Users indexes
     await db.execute('CREATE INDEX idx_users_email ON users(email)');
-    await db.execute('CREATE INDEX idx_users_active ON users(is_active)');
+    // Use `status` column (new schema) instead of legacy `is_active`.
+    await db.execute('CREATE INDEX idx_users_status ON users(status)');
 
     // Tables indexes
     await db.execute('CREATE INDEX idx_tables_status ON tables(status)');
@@ -601,15 +626,19 @@ class DatabaseHelper {
       'updated_at': now,
     });
 
-    // Insert default admin user
+    // Insert default admin user (match new users schema)
     await db.insert('users', {
       'id': '1',
-      'name': 'Admin',
+      'username': 'admin',
+      'full_name': 'Admin',
       'email': 'admin@example.com',
-      'role': 'admin',
-      'is_active': 1,
+      // role as integer (0=admin by convention in older migrations)
+      'role': 0,
+      'status': 1,
+      'last_login_at': null,
       'created_at': now,
       'updated_at': now,
+      'phone_number': null,
     });
 
     // Insert default payment methods

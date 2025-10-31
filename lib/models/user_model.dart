@@ -1,15 +1,6 @@
-enum UserRole {
-  admin,
-  manager,
-  cashier,
-  waiter,
-}
+enum UserRole { admin, manager, cashier, waiter }
 
-enum UserStatus {
-  active,
-  inactive,
-  suspended,
-}
+enum UserStatus { active, inactive, suspended }
 
 class User {
   final String id;
@@ -18,7 +9,6 @@ class User {
   final String email;
   final UserRole role;
   UserStatus status;
-  final String pin;
   DateTime? lastLoginAt;
   DateTime createdAt;
   String? phoneNumber;
@@ -29,7 +19,8 @@ class User {
     required this.fullName,
     required this.email,
     required this.role,
-    required this.pin,
+    // PINs are stored in an encrypted PinStore; do not persist plaintext
+    // PIN on the public model.
     this.status = UserStatus.active,
     this.lastLoginAt,
     DateTime? createdAt,
@@ -61,7 +52,8 @@ class User {
   }
 
   bool get canManageUsers => role == UserRole.admin || role == UserRole.manager;
-  bool get canManageSettings => role == UserRole.admin || role == UserRole.manager;
+  bool get canManageSettings =>
+      role == UserRole.admin || role == UserRole.manager;
   bool get canViewReports => role == UserRole.admin || role == UserRole.manager;
   bool get canProcessPayments => role != UserRole.waiter;
 
@@ -72,7 +64,6 @@ class User {
     String? email,
     UserRole? role,
     UserStatus? status,
-    String? pin,
     DateTime? lastLoginAt,
     DateTime? createdAt,
     String? phoneNumber,
@@ -84,7 +75,7 @@ class User {
       email: email ?? this.email,
       role: role ?? this.role,
       status: status ?? this.status,
-      pin: pin ?? this.pin,
+
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
       createdAt: createdAt ?? this.createdAt,
       phoneNumber: phoneNumber ?? this.phoneNumber,

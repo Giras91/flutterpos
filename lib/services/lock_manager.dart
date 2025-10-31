@@ -48,7 +48,6 @@ class LockManager extends ChangeNotifier {
               fullName: 'Administrator',
               email: '',
               role: UserRole.admin,
-              pin: candidate,
             ).copyWith(lastLoginAt: DateTime.now());
           }
         } catch (_) {
@@ -61,7 +60,6 @@ class LockManager extends ChangeNotifier {
             fullName: 'Administrator',
             email: '',
             role: UserRole.admin,
-            pin: candidate,
           ).copyWith(lastLoginAt: DateTime.now());
         }
       } else {

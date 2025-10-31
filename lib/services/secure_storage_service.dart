@@ -42,4 +42,32 @@ class SecureStorageService {
   Future<void> clearKey() async {
     await _secure.delete(key: _keyName);
   }
+
+  /// Export the stored encryption key as a base64 string, or null if none.
+  Future<String?> exportKey() async {
+    final stored = await _secure.read(key: _keyName);
+    if (stored == null || stored.isEmpty) return null;
+    return stored;
+  }
+
+  /// Import a base64-encoded 32-byte key into secure storage.
+  /// Throws [FormatException] if the provided key is invalid.
+  Future<void> importKey(String base64Key) async {
+    try {
+      final bytes = base64Decode(base64Key);
+      if (bytes.length != 32) {
+        throw FormatException('Key must decode to 32 bytes');
+      }
+      await _secure.write(key: _keyName, value: base64Key);
+    } catch (e) {
+      // Rewrap common errors as FormatException for callers
+      throw FormatException('Invalid base64 key: $e');
+    }
+  }
+
+  /// Returns whether a key currently exists in secure storage.
+  Future<bool> hasKey() async {
+    final s = await _secure.read(key: _keyName);
+    return s != null && s.isNotEmpty;
+  }
 }

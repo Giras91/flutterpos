@@ -54,8 +54,14 @@ class _SetupScreenState extends State<SetupScreen> {
         final updated = admin.copyWith(
           fullName: _adminNameCtrl.text.trim(),
           email: _adminEmailCtrl.text.trim(),
-          pin: pin,
         );
+
+        // Persist PIN in the encrypted PinStore and then update the user record
+        try {
+          await PinStore.instance.setPinForUser(admin.id, pin);
+          // Also set the admin master PIN so LockManager can check it directly.
+          await PinStore.instance.setAdminPin(pin);
+        } catch (_) {}
 
         await DatabaseService.instance.updateUser(updated);
       } else {
@@ -69,15 +75,16 @@ class _SetupScreenState extends State<SetupScreen> {
           fullName: _adminNameCtrl.text.trim(),
           email: _adminEmailCtrl.text.trim(),
           role: UserRole.admin,
-          pin: pin,
         );
         await DatabaseService.instance.insertUser(user);
-        // Save admin PIN securely in Hive encrypted box for quick unlock
+        // Save admin PIN securely in Hive encrypted box for quick unlock and
+        // also map the admin user's id to the PIN for per-user lookup.
         try {
           await PinStore.instance.setAdminPin(pin);
-        } catch (_) {
-          // non-fatal
-        }
+        } catch (_) {}
+        try {
+          await PinStore.instance.setPinForUser(id, pin);
+        } catch (_) {}
       }
     } catch (e) {
       // ignore DB errors but log in debug

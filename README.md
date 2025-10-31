@@ -118,3 +118,34 @@ This project is provided as-is for demonstration and development. Check the
 repository for a LICENSE file if you plan to redistribute or relicense.
 
 If you want me to push changes or open a PR (I already pushed `responsive/layout-fixes`), I can help with the PR description or CI next.
+
+## AES encryption key backup & restore
+
+This project stores user PINs in an encrypted Hive box. The AES encryption key
+used to encrypt that box is stored in the platform's secure storage. Losing the
+encryption key will make all encrypted PINs permanently unrecoverable. Take
+care when importing or rotating keys.
+
+Recommended operator steps:
+
+- Before importing a new AES key, always export the current key as a secure
+  backup and store it in a safe location (encrypted backup, hardware token,
+  or secure file share). The app provides an "Encryption Key Backup" entry in
+  Settings which can export the key to a temporary file and copy it to the
+  clipboard.
+- When importing a key, verify the source and ensure the key is Base64-encoded
+  and decodes to 32 bytes. The app validates the key and will reject invalid
+  inputs. For safety, the import flow will prompt to export the current key to
+  a temporary file before completing the import.
+- Technician override: the maintenance/backup flows allow the technician
+  override PIN `888888` if an operator admin PIN is not available. Use this
+  only when directed by authorized personnel.
+
+Security notes:
+
+- The AES key is stored in platform secure storage; losing or deleting secure
+  storage entries (for example during a factory reset) will break the ability
+  to decrypt stored PINs.
+- Consider an organizational secret-management policy for key backups and
+  rotation. This repository doesn't implement remote key escrow; operators
+  should keep an offline copy of the exported key in a secure vault.
